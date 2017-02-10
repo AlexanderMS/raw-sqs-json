@@ -16,9 +16,13 @@
     "url": "git+https://github.com/AlexanderMS/raw-sqs-json.git"
   },
   "keywords": [
-    "csv",
-    "split",
-    "stream"
+    "raw",
+    "delivery",
+    "sqs",
+    "json",
+    "poll",
+    "receive"
+    "parse"
   ],
   "author": "Alexandr Murashkin",
   "license": "MIT",
