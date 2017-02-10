@@ -7,7 +7,7 @@ const
 
 chai.use(require('chai-as-promised'));
 
-describe('csv-split-stream', function() {
+describe('raw-sqs-json', function() {
   it('placeholder', function() {
     assert(rawSqsJson.processJsonMessages);
   });
