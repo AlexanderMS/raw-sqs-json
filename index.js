@@ -16,7 +16,7 @@ class MessageValidationError extends Error {
 function processResults(results) {
   const total = results.length;
   const succeeded = results.reduce((acc, result) => {
-    return result.isError ? 0 : 1
+    return result.isError ? acc : (acc + 1)
   }, 0);
   const failed = total - succeeded;
 

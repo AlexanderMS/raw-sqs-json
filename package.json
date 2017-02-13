@@ -1,6 +1,6 @@
 {
   "name": "raw-sqs-json",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Simplifies reception, processing, and removal of JSON objects stored in SQS",
   "main": "index.js",
   "directories": {
