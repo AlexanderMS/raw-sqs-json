@@ -3,12 +3,12 @@
 const
   chai = require('chai'),
   assert = chai.assert,
-  rawSqsJson = require('../index.js');
+  sqsJson = require('../index.js');
 
 chai.use(require('chai-as-promised'));
 
-describe('raw-sqs-json', function() {
+describe('sqs-json', function() {
   it('placeholder', function() {
-    assert(rawSqsJson.processJsonMessages);
+    assert(sqsJson.processJsonMessages);
   });
 });

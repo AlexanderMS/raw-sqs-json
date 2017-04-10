@@ -1,27 +1,34 @@
-# raw-sqs-json
+# sqs-json
 
-Simplifies reception, processing, and removal of JSON objects stored in SQS
+[![npm version](https://badge.fury.io/js/sqs-json.svg)](https://badge.fury.io/js/sqs-json)
+[![CircleCI](https://circleci.com/gh/AlexanderMS/sqs-json.svg?style=shield)](https://circleci.com/gh/AlexanderMS/sqs-json)
 
-`npm install raw-sqs-json`
+Simplifies reception, processing, and removal of JSON objects stored in SQS.
 
-## Features
+`npm install sqs-json`
 
-1. Polls the given queue using `sqs` and `params`
-2. Attempts to parse each message as JSON (**Important**: "Raw delivery" must be enabled for the subscription to the queue)
-3. If the message is valid, calls the provided `consumeMessage` callback
-4. If `consumeMessage` resolves for the given message, removes the message from the queue
-5. Outputs the `total` number of messages, number of `succeeded` (resolved by `consumeMessage`), `failed` (invalid JSONs and rejected by `consumeMessage`), and an array of results for each message
+## API
+
+`sqsJson.processJsonMessages(sqs, params, callback<message>) -> Promise`
+
+1. Polls a queue using provided `sqs` and `params`:  [sqs.receiveMessage(params)](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SQS.html#receiveMessage-property)
+2. Attempts to parse each message as JSON
+3. If the message is a valid JSON, calls the provided `callback`
+4. If the callback resolves for the given message, removes the message from the queue, otherwise leaves the message in the queue
+5. Outputs the `total` number of messages, number of `succeeded` (resolved by `callback`), `failed` (rejected by `callback` OR invalid JSON messages), and an array of `results` for each message in the format defined below
+
+**Note**: unless Raw Message Delivery is enabled for the queue subscription, the parsed message will also include AWS wrappers. You may want to enable this in your AWS console to work with pure JSON objects easier.
 
 ## Example:
 ```javascript
 const
   AWS = require('aws-sdk'),
-  rawSqsJson = require('raw-sqs-json'),
+  sqsJson = require('sqs-json'),
   sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
 
 ...
 
-return rawSqsJson.processJsonMessages(sqs, {
+return sqsJson.processJsonMessages(sqs, {
   QueueUrl: 'https://sqs.us-east-1.amazonaws.com/12345678912/my-awesome-queue',
   MaxNumberOfMessages: 10,
   VisibilityTimeout: 30
@@ -37,7 +44,7 @@ return rawSqsJson.processJsonMessages(sqs, {
 
 ```
 
-Response:
+Example response:
 
 ```json
 {
@@ -74,4 +81,7 @@ Response:
 }
 ```
 
-After execution, the message corresponding to the first result will be removed.
+In the example, the message corresponding
+to the first result will be removed from the queue as it was successful,
+while the remaining two will be rejected and stay in the queue adhering to SQS
+"maximum receives" policies.
